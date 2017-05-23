@@ -1,0 +1,16 @@
+SheetConnection my_sheet("../../data/base.xlsx");
+ 
+m from SheetRead(my_sheet, "_m");
+L from SheetRead(my_sheet, "_L");
+n from SheetRead(my_sheet, "_n");
+W from SheetRead(my_sheet, "_W");
+D from SheetRead(my_sheet, "_1D");
+C from SheetRead(my_sheet, "_C");
+E from SheetRead(my_sheet, "_E");
+R from SheetRead(my_sheet, "_R");
+H from SheetRead(my_sheet, "_1H");
+T from SheetRead(my_sheet, "_T");
+S from SheetRead(my_sheet, "_S");
+O from SheetRead(my_sheet, "_O");
+
+y = [[1 0 0 1 0 0 0 0 1 0 0 1 0 0 0] [0 1 0 0 1 1 0 0 0 1 1 0 0 1 1] [0 0 1 0 0 0 1 1 0 0 0 0 1 0 0]];
