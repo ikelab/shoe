@@ -44,7 +44,7 @@ subject to {
      
 	forall(<k,i> in KI) {
 		Capacity:
-		sum(j in 1..n) H[j] / (R[<k,i>] * E[<k,i>][j]) * x[<k,i>][j] <= C[<k,i>] + z[<k,i>];
+		sum(j in 1..n) H[j] / (R[<k,i>] * E[<k,i>][j]) * x[<k,i>][j] <= C[<k,i>] + z[<k,i>] + v[<k,i>];
 		
 		Capacity_overtime:
 		z[<k, i>] <= 0.5 * C[<k, i>];
