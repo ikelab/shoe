@@ -1,9 +1,10 @@
-from random import random, sample
+from random import random, sample, seed
 from math import exp
 
 import numpy as np
 
-import prob
+from custom import prob
+from custom.prob import processing_and_setup_time
 
 
 LEATHER = prob.LEATHER
@@ -70,29 +71,17 @@ def evaluate(n, m, L, pi, F, alpha, beta, T, Z, R, gamma, C, LX):
         #print(f'Makespan is {MS}, so order {j} is assigned to line {l}')
         X[l].append(j)
         
-        Tj = T[j]
+        Tj, Rj, Cj = T[j], R[j], C[j]
+        piTj, FlTj, Zj = pi[Tj], F[l][Tj], Z[j]
         
         for i in range(m):
-            # Get processing time.
-            p = pi[Tj][i]
-            if p == -1:
+            # Check end of step.
+            if piTj[i] == -1:
                 break
-            p += F[l][Tj] + Z[Tj]
-            if R[j][i] == LEATHER:
-                p += gamma
             
-            # Get setup time
-            s = 0
-            # Material
-            if lR[l][i] is not None and R[j][i] != -1 and lR[l][i] != R[j][i]:
-                s += alpha
-            if R[j][i] != -1:
-                lR[l][i] = R[j][i]
-            # Color
-            if lC[l][i] is not None and C[j][i] != -1 and lC[l][i] != C[j][i]:
-                s += beta
-            if C[j][i] != -1:
-                lC[l][i] = C[j][i]
+            # Get processing and setup time.
+            p, s = processing_and_setup_time(i, piTj, FlTj, alpha, beta, Zj,
+                                             Rj, gamma, Cj, lR[l], lC[l])
             
             lY[l][i] = max(lY[l][i - 1], lY[l][i] + s) + p
         
@@ -108,7 +97,9 @@ def test_makespan():
     assert ms == prob.makespan(*pb, X)
     print(ms, X)
 
+
 def test():
+    #seed(0)
     #pb = prob.ex1()
     pb = prob.read_problem_from_xlsx('data/ex1.xlsx')
     #pb = prob.read_problem_from_xlsx('data/big4.xlsx')
@@ -120,5 +111,5 @@ def test():
 
 
 if __name__ == '__main__':
-    #test_makespan()
-    test()
+    test_makespan()
+    #test()

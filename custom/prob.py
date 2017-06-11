@@ -25,6 +25,70 @@ import openpyxl
 LEATHER = 2
 
 
+def makespan(n, m, L, pi, F, alpha, beta, T, Z, R, gamma, C, X):
+    """
+    lY[i]: last completion time of machine i
+    lR[i]: last material used by machine i
+    lC[i]: last color used by machine i
+    """
+    
+    # Iterate each line (flow shop) and get its makespan
+    ms = 0
+    for l, Xl in enumerate(X):
+        print(f'[{l}]')
+        
+        # None means setup was not at all.
+        lY, lR, lC = [0] * (m + 1), [None] * m, [None] * m
+        
+        Fl = F[l]
+        
+        for j in Xl:
+            print(f'{j}: ', end='')
+            
+            Tj, Rj, Cj = T[j], R[j], C[j]
+            piTj, FlTj, Zj = pi[Tj], Fl[Tj], Z[j]
+            
+            for i in range(m):
+                # Check end of step.
+                if piTj[i] == -1:
+                    break
+                
+                # Get processing and setup time.
+                p, s = processing_and_setup_time(i, piTj, FlTj, alpha, beta, Zj,
+                                                 Rj, gamma, Cj, lR, lC)
+                
+                lY[i] = max(lY[i - 1], lY[i] + s) + p
+            
+                print(f'm{i}({lY[i] - s - p}-{lY[i] - p}-{lY[i]}) ', end='')
+            
+            print()
+        
+        ms = max(ms, max(lY))
+    
+    return ms
+
+
+def processing_and_setup_time(i, piTj, FlTj, alpha, beta, Zj, Rj, gamma, Cj, lR, lC):
+    # Processing time
+    p = piTj[i] + FlTj + Zj
+    if Rj[i] == LEATHER:
+        p += gamma
+    
+    s = 0
+    # Setup time by material
+    if lR[i] is not None and Rj[i] != -1 and lR[i] != Rj[i]:
+        s += alpha
+    if Rj[i] != -1:
+        lR[i] = Rj[i]
+    # Setup time by color
+    if lC[i] is not None and Cj[i] != -1 and lC[i] != Cj[i]:
+        s += beta
+    if Cj[i] != -1:
+        lC[i] = Cj[i]
+    
+    return p, s
+
+
 def xlread_by_name(wb, name):
     C = [wb[title][coord] for title, coord in wb.defined_names[name].destinations][0]
     
@@ -127,70 +191,17 @@ def ex1():
     return n, m, L, pi, F, alpha, beta, T, Z, R, gamma, C
 
 
-def makespan(n, m, L, pi, F, alpha, beta, T, Z, R, gamma, C, X):
-    """
-    lY[i]: last completion time of machine i
-    lR[i]: last material used by machine i
-    lC[i]: last color used by machine i
-    """
-    
-    # Iterate each line (flow shop) and get its makespan
-    ms = 0
-    for l, Xl in enumerate(X):
-        print(f'[{l}]')
-        
-        lY = [0] * (m + 1)
-        
-        # None means setup was not at all.
-        lR, lC = [None] * m, [None] * m
-        
-        for j in Xl:
-            print(f'{j}: ', end='')
-            
-            Tj = T[j]
-            
-            for i in range(m):
-                # Get processing time.
-                p = pi[Tj][i]
-                if p == -1:
-                    break
-                p += F[l][Tj] + Z[Tj]
-                if R[j][i] == LEATHER:
-                    p += gamma
-                
-                # Get setup time
-                s = 0
-                # Material
-                if lR[i] is not None and R[j][i] != -1 and lR[i] != R[j][i]:
-                    s += alpha
-                if R[j][i] != -1:
-                    lR[i] = R[j][i]
-                # Color
-                if lC[i] is not None and C[j][i] != -1 and lC[i] != C[j][i]:
-                    s += beta
-                if C[j][i] != -1:
-                    lC[i] = C[j][i]
-                
-                lY[i] = max(lY[i - 1], lY[i] + s) + p
-                
-                print(f'm{i}({lY[i] - s - p}-{lY[i] - p}-{lY[i]}) ', end='')
-            
-            print()
-        
-        ms = max(ms, max(lY))
-    
-    return ms
-
-
 def test_ex1():
     pb = ex1()
     X = [[2, 1, 4], [0, 3], [5, 6]]
     print(makespan(*pb, X))
 
+
 def test_ex1_xls():
     pb = read_problem_from_xlsx('data/ex1.xlsx')
     X = [[2, 1, 4], [0, 3], [5, 6]]
     print(makespan(*pb, X))
+
 
 def test_big4():
     pb = read_problem_from_xlsx('data/big4.xlsx')
