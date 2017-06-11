@@ -1,5 +1,6 @@
 from random import random, sample, seed
-from math import exp
+from math import exp, inf
+from itertools import permutations
 
 import numpy as np
 
@@ -92,7 +93,7 @@ def evaluate(n, m, L, pi, F, alpha, beta, T, Z, R, gamma, C, LX):
 
 def test_makespan():
     pb = prob.ex1()
-    LX = [2, 0, 5, 1, 6, 4, 3]
+    LX = [0, 3, 5, 2, 6, 4, 1]
     ms, X = evaluate(*pb, LX)
     assert ms == prob.makespan(*pb, X)
     print(ms, X)
@@ -111,5 +112,5 @@ def test():
 
 
 if __name__ == '__main__':
-    test_makespan()
-    #test()
+    #test_makespan()
+    test()

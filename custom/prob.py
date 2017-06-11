@@ -25,7 +25,7 @@ import openpyxl
 LEATHER = 2
 
 
-def makespan(n, m, L, pi, F, alpha, beta, T, Z, R, gamma, C, X):
+def makespan(n, m, L, pi, F, alpha, beta, T, Z, R, gamma, C, X, verbose=True):
     """
     lY[i]: last completion time of machine i
     lR[i]: last material used by machine i
@@ -35,7 +35,8 @@ def makespan(n, m, L, pi, F, alpha, beta, T, Z, R, gamma, C, X):
     # Iterate each line (flow shop) and get its makespan
     ms = 0
     for l, Xl in enumerate(X):
-        print(f'[{l}]')
+        if verbose:
+            print(f'[{l}]')
         
         # None means setup was not at all.
         lY, lR, lC = [0] * (m + 1), [None] * m, [None] * m
@@ -43,7 +44,8 @@ def makespan(n, m, L, pi, F, alpha, beta, T, Z, R, gamma, C, X):
         Fl = F[l]
         
         for j in Xl:
-            print(f'{j}: ', end='')
+            if verbose:
+                print(f'{j}: ', end='')
             
             Tj, Rj, Cj = T[j], R[j], C[j]
             piTj, FlTj, Zj = pi[Tj], Fl[Tj], Z[j]
@@ -59,9 +61,11 @@ def makespan(n, m, L, pi, F, alpha, beta, T, Z, R, gamma, C, X):
                 
                 lY[i] = max(lY[i - 1], lY[i] + s) + p
             
-                print(f'm{i}({lY[i] - s - p}-{lY[i] - p}-{lY[i]}) ', end='')
+                if verbose:
+                    print(f'm{i}({lY[i] - s - p}-{lY[i] - p}-{lY[i]}) ', end='')
             
-            print()
+            if verbose:
+                print()
         
         ms = max(ms, max(lY))
     
@@ -193,13 +197,13 @@ def ex1():
 
 def test_ex1():
     pb = ex1()
-    X = [[2, 1, 4], [0, 3], [5, 6]]
+    X = [[0, 2, 1], [3, 4], [5, 6]]
     print(makespan(*pb, X))
 
 
 def test_ex1_xls():
     pb = read_problem_from_xlsx('data/ex1.xlsx')
-    X = [[2, 1, 4], [0, 3], [5, 6]]
+    X = [[0, 2, 1], [3, 4], [5, 6]]
     print(makespan(*pb, X))
 
 
