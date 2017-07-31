@@ -4,17 +4,19 @@ m: number of machines
 L: number of lines
 
 pi[t][i]: standard processing time of type t at machine i
-alpha: setup time required to change material
-beta: setup time required to change color
-F[l][t]: additional processing time in line l for handling type t
 
 T[j]: type of order j
+
+F[l][t]: additional processing time in line l for handling type t
 Z[j]: additional processing time by size, of order j
+gamma: additional processing time by leather (R[j][i] == 2)
+
 R[j][i]: material at machine i, of order j
   -1 means that material is not used
-gamma: additional processing time by leather (R[j][i] == 2)
-  -1 means that color is not used
 C[j][i]: color at machine i, of order j
+  -1 means that color is not used
+alpha: setup time required to change material
+beta: setup time required to change color
 """
 
 from collections.abc import Sequence
@@ -146,7 +148,14 @@ def read_problem_from_xlsx(path):
     gamma = xlread_by_name(wb, 'gamma')  
     C     = xlread_by_name(wb, '_C')
     
+    NS    = xlread_by_name(wb, 'NS')
+    
     n, m, L = len(T), len(pi[0]), len(F)
+    
+    for j, (Tj, Rj, Cj) in enumerate(zip(T, R, C)):
+        for i in range(m):
+            if pi[Tj][i] == -1 or NS[Tj][i] == -1:
+                assert Rj[i] == -1 and Cj[i] == -1, 'Error j%d i%d' % (j, i)
     
     return n, m, L, pi, F, alpha, beta, T, Z, R, gamma, C
 
@@ -203,7 +212,7 @@ def test_ex1():
 
 def test_ex1_xls():
     pb = read_problem_from_xlsx('data/ex1.xlsx')
-    X = [[0, 2, 1], [3, 4], [5, 6]]
+    X = [(0, 1), (3, 5), (2, 6, 4)]
     print(makespan(*pb, X))
 
 
