@@ -1,0 +1,16 @@
+//SheetConnection test("../data/ex1.xlsx");
+SheetConnection test("../data/rand.xlsx");
+
+n     from SheetRead(test, "_n");
+m     from SheetRead(test, "_m");
+L     from SheetRead(test, "_L");
+h     from SheetRead(test, "_h");
+alpha from SheetRead(test, "alpha");
+beta  from SheetRead(test, "beta");
+gamma from SheetRead(test, "gamma");
+T     from SheetRead(test, "T");
+r     from SheetRead(test, "_R");
+c     from SheetRead(test, "_C");
+pi    from SheetRead(test, "pi");
+F     from SheetRead(test, "F");
+Z     from SheetRead(test, "Z");

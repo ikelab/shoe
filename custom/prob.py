@@ -210,9 +210,8 @@ def test_ex1():
     print(makespan(*pb, X))
 
 
-def test_ex1_xls():
-    pb = read_problem_from_xlsx('data/ex1.xlsx')
-    X = [(0, 1), (3, 5), (2, 6, 4)]
+def test_xls(file_name, X):
+    pb = read_problem_from_xlsx(file_name)
     print(makespan(*pb, X))
 
 
@@ -228,5 +227,6 @@ def test_big4():
 
 if __name__ == '__main__':
     #test_ex1()
-    test_ex1_xls()
+    #test_xls('data/ex1.xlsx', [(0, 1), (3, 5), (2, 6, 4)])
+    test_xls('data/rand.xlsx', [(0, 1), (3, 5), (2, 6, 4)])
     #test_big4()

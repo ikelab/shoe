@@ -101,11 +101,14 @@ def test_makespan():
 
 def test():
     #seed(0)
+    
     #pb = prob.ex1()
-    pb = prob.read_problem_from_xlsx('data/ex1.xlsx')
+    pb = prob.read_problem_from_xlsx('data/rand.xlsx')
     #pb = prob.read_problem_from_xlsx('data/big4.xlsx')
+    
     LX = solve(*pb)
     ms, X = evaluate(*pb, LX)
+    
     print(ms)
     print(LX)
     print(X)

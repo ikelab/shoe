@@ -67,7 +67,10 @@ def enum_all_list_schedules(n, m, L, pi, F, alpha, beta, T, Z, R, gamma, C):
 
 
 if __name__ == '__main__':
-    from custom import prob 
-    pb = prob.read_problem_from_xlsx('data/ex1.xlsx')
-    #print(enum_all_schedules(*pb))
-    print(enum_all_list_schedules(*pb))
+    from custom import prob
+     
+    #pb = prob.read_problem_from_xlsx('data/ex1.xlsx')
+    pb = prob.read_problem_from_xlsx('data/rand.xlsx')
+    
+    print(enum_all_schedules(*pb))
+    #print(enum_all_list_schedules(*pb))
