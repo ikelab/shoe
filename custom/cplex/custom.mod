@@ -33,7 +33,7 @@ dvar float+ s_r[1..m][1..n];
 dvar float+ s_c[1..m][1..n];
 dvar float+ ms;
 
-float M = 100;
+float M = ceil(n / L + m) * (max(i in 1..m, j in 1..n) pi[i][j] + max(j in 1..n) Z[j] + alpha + beta + gamma) * 1.2;
 
 
 constraint C1[1..L][1..n];
