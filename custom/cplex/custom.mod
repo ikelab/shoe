@@ -1,7 +1,7 @@
-int n = ...; // number of orders
-int m = ...; // number of machines
-int L = ...; // number of lines
-int h = ...;
+int n = ...;  // number of orders
+int m = ...;  // number of machines
+int L = ...;  // number of lines
+int h = ...;  // number of types
 
 float pi[1..h][1..m] = ...;
 
@@ -33,7 +33,7 @@ dvar float+ s_r[1..m][1..n];
 dvar float+ s_c[1..m][1..n];
 dvar float+ ms;
 
-float M = ceil(n / L + m) * (max(i in 1..m, j in 1..n) pi[i][j] + max(j in 1..n) Z[j] + alpha + beta + gamma) * 1.2;
+float M = ceil(n / L + m) * (max(t in 1..h, i in 1..m) pi[t][i] + max(j in 1..n) Z[j] + alpha + beta + gamma) * 1.2;
 
 
 constraint C1[1..L][1..n];
@@ -50,8 +50,8 @@ constraint C6[1..L][1..m][1..n][1..n];
 constraint C7[1..L][1..m][1..n][1..n];
 
 
-//minimize ms;
-minimize ms + 0.0001 * sum(i in 1..m, j in 1..n) x[i][j];
+minimize ms;
+//minimize ms + 0.0001 * sum(i in 1..m, j in 1..n) x[i][j];
 
 subject to {
 
@@ -98,7 +98,7 @@ subject to {
 		s_c[i][k] >= beta * ((j < k ? y[j][k] : 1 - y[k][j]) + z[l][j] + z[l][k] - 2
 							 - sum(q in 1..n : q != j && q != k && c[i][q] != -1) w[l][j][q][k]);
 	}
-	
+    
 	// For removing warnings for unused
 	forall(j in 1..n, k in 1..n: j >= k) {
 		y[j][k] == 0;
